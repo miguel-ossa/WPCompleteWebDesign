@@ -57,11 +57,11 @@ class CubeHandler extends \MailPoetVendor\Monolog\Handler\AbstractProcessingHand
         if (!\extension_loaded('sockets')) {
             throw new \MailPoetVendor\Monolog\Handler\MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
         }
-        $this->udpConnection = \socket_create(\AF_INET, \SOCK_DGRAM, 0);
+        $this->udpConnection = socket_create(AF_INET, SOCK_DGRAM, 0);
         if (!$this->udpConnection) {
             throw new \LogicException('Unable to create a socket');
         }
-        if (!\socket_connect($this->udpConnection, $this->host, $this->port)) {
+        if (!socket_connect($this->udpConnection, $this->host, $this->port)) {
             throw new \LogicException('Unable to connect to the socket at ' . $this->host . ':' . $this->port);
         }
     }
@@ -108,7 +108,7 @@ class CubeHandler extends \MailPoetVendor\Monolog\Handler\AbstractProcessingHand
         if (!$this->udpConnection) {
             $this->connectUdp();
         }
-        \socket_send($this->udpConnection, $data, \strlen($data), 0);
+        socket_send($this->udpConnection, $data, \strlen($data), 0);
     }
     private function writeHttp($data)
     {
